@@ -38,12 +38,14 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
-        script: kill %1 && java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar &
+        script: |
+          kill %1
+          java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar &
     - name: Health Check
       uses: jtalk/url-health-check-action@v2
       with:
         # Check the following URLs one by one sequentially
-        url: https://${{ secrets.SSH_HOST }}:3000/health
+        url: http://${{ secrets.SSH_HOST }}:3000/health
         # Fail this action after this many failed attempts
         max-attempts: 3 # Optional, defaults to 1
         # Delay between retries
