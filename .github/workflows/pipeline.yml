@@ -40,7 +40,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           pkill java
-          java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar &
+          java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar > log.txt 2> error.txt &
     - name: Health Check
       uses: jtalk/url-health-check-action@v2
       with:
