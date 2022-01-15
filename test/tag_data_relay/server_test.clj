@@ -22,13 +22,16 @@
 
 (deftest subscribe-route-test
   (testing "Subscribe route test"
-    (let [response (app {:request-method :post
-                         :uri            "/api/subscribe"})
+    (let [ip       "192.168.1.1"
+          response (app {:request-method :post
+                         :uri            "/api/subscribe"
+                         :query-params   {"ip" ip}})
           status   (:status response)
           body     (slurp (:body response))]
       (is (= 200 status))
-      (is (s/includes? body "port")))))
-
+      (is (s/includes? body "port"))
+      (is (s/includes? body "ip"))
+      (is (s/includes? body ip)))))
 
 (deftest update-route-test
   (testing "Update route test"
