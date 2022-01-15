@@ -27,6 +27,8 @@ jobs:
     - name: Prepare SSH
       run: mkdir ~/.ssh
         touch ~/.ssh/known_hosts
+        ls ~/
+        ls ~/.ssh
         ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         echo "${{ secrets.SSH_KEY }}" > key.pem
         chmod 400 key.pem
