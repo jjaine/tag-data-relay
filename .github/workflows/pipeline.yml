@@ -23,3 +23,13 @@ jobs:
       run: lein deps
     - name: Run tests
       run: lein test
+    - name: Deploy to Heroku
+      if: ${{ github.event_name == 'push' }}
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "tag-data-relay"
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
+        healthcheck: "https://tag-data-relay.herokuapp.com/health"
+        checkstring: "ok"
+        rollbackonhealthcheckfailed: true
