@@ -14,8 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install linter
-      run: curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo \
-           chmod +x install-clj-kondo \
+      run: curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+           chmod +x install-clj-kondo
            ./install-clj-kondo
     - name: Run linter
       run: clj-kondo --lint src
