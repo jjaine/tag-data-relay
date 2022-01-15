@@ -9,6 +9,7 @@
                  [ring/ring-jetty-adapter "1.9.4"]
                  [aero "1.1.6"]]
   :main ^:skip-aot tag-data-relay.core
+  :min-lein-version "2.0.0"
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "1.0.0"]]
                    :repl-options {:init-ns dev
                                   :init    (start)}
