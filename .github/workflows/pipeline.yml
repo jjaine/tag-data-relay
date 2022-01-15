@@ -1,0 +1,25 @@
+name: Clojure CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install linter
+      run: curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo \
+           chmod +x install-clj-kondo \
+           ./install-clj-kondo
+    - name: Run linter
+      run: clj-kondo --lint src
+    - name: Install dependencies
+      run: lein deps
+    - name: Run tests
+      run: lein test
