@@ -39,7 +39,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          kill %1
+          pkill java
           java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar &
     - name: Health Check
       uses: jtalk/url-health-check-action@v2
