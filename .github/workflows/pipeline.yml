@@ -43,6 +43,9 @@ jobs:
         script: |
           pkill java
           java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar > log.txt 2> error.txt &
+    - name: Sleep for 30 seconds
+      run: sleep 30s
+      shell: bash
     - name: Health Check
       if: ${{ github.event_name == 'push' }}
       uses: jtalk/url-health-check-action@v2
