@@ -1,23 +1,18 @@
 (ns tag-data-relay.udp
   (:require [taoensso.timbre :refer [infof]])
-  (:import (java.net InetAddress DatagramPacket DatagramSocket)))
+  (:import (java.net InetSocketAddress DatagramPacket DatagramSocket)))
 
 (defonce udp-server (atom nil))
 (def udp-port 5500)
 
-(defn localhost
-  []
-  (. InetAddress getLocalHost))
-
-(defn message [text port]
+(defn message [text ip port]
   (DatagramPacket. (.getBytes text)
                    (.length text)
-                   (localhost)
-                   port))
+                   (InetSocketAddress. ip port)))
 
 (defn send-update
-  [id x y port]
-  (.send @udp-server (message (str "{ id: " id ", x: " x ", y: " y " }") port)))
+  [id x y ip port]
+  (.send @udp-server (message (str "{ id: " id ", x: " x ", y: " y " }") ip port)))
 
 (defn create-udp-server
   []

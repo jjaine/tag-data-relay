@@ -6,8 +6,10 @@
 (s/def ::id string?)
 (s/def ::x int?)
 (s/def ::y int?)
+(s/def ::ip string?)
 
 (s/def ::update-request (s/keys :req-un [::id ::x ::y]))
+(s/def ::subscribe-request (s/keys :req-un [::ip]))
 
 (defonce udp-clients (atom ()))
 
@@ -22,8 +24,10 @@
 
 (defn send-updates
   [id x y]
-  (doseq [port @udp-clients] 
-    (udp-server/send-update id x y port)))
+  (doseq [port (map :port @udp-clients)
+          ip   (map :ip @udp-clients)]
+    (println "Send update to" ip port)
+    (udp-server/send-update id x y ip port)))
 
 (def route
   ["/api"
@@ -38,10 +42,12 @@
 
    ["/subscribe"
     {:post
-     {:parameters {:query {}}
-      :handler    (fn [{_ :parameters}]
-                    (infof "Subscription request received!")
+     {:parameters {:query ::subscribe-request}
+      :handler    (fn [{{{:keys [ip]} :query} :parameters}]
+                    (infof "Subscription request received from " ip)
                     (let [port (gen-port)]
-                      (swap! udp-clients conj port)
+                      (swap! udp-clients conj {:port port
+                                               :ip  ip})
                       {:status 200
-                       :body {:port port}}))}}]])
+                       :body {:port port
+                              :ip ip}}))}}]])

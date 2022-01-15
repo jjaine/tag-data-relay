@@ -1,5 +1,6 @@
 (ns tag-data-relay.server
-  (:require [tag-data-relay.route.api :as route.api]
+  (:require [tag-data-relay.config :as config]
+            [tag-data-relay.route.api :as route.api]
             [tag-data-relay.route.health :as route.health]
             [tag-data-relay.udp :as udp-server]
             [mount.core :as mount :refer [defstate]]
@@ -57,6 +58,6 @@
   (udp-server/stop-udp-server))
 
 (defstate server
-  :start (start {:port (Integer/parseInt (System/getenv "PORT"))})
+  :start (start config/config)
   :stop  (when server
            (stop server)))
