@@ -37,9 +37,9 @@
           y 31
           response (app {:request-method :post
                          :uri            "/api/update"
-                         :query-params {"id" id
-                                        "x" x
-                                        "y" y}})
+                         :query-params   {"id" id
+                                          "x"  x
+                                          "y"  y}})
           status   (:status response)
           body     (slurp (:body response))]
       (is (= 200 status))
