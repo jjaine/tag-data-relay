@@ -58,6 +58,6 @@
   (udp-server/stop-udp-server))
 
 (defstate server
-  :start (start config/config)
+  :start (start {:port (Integer/parseInt (System/getenv "PORT"))})
   :stop  (when server
            (stop server)))
