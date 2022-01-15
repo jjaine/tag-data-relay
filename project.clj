@@ -6,8 +6,7 @@
                  [com.taoensso/timbre "5.1.2"]
                  [mount "0.1.16"]
                  [tolitius/mount-up "0.1.3"]
-                 [ring/ring-jetty-adapter "1.9.4"]
-                 [aero "1.1.6"]]
+                 [ring/ring-jetty-adapter "1.9.4"]]
   :main ^:skip-aot tag-data-relay.core
   :min-lein-version "2.0.0"
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "1.0.0"]]
