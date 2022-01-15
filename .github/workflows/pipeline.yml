@@ -25,4 +25,5 @@ jobs:
     - name: Run build
       run: lein uberjar
     - name: Deploy to EC2
-      run: scp -i ${{ secrets.SSH_KEY }} target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/tag-data-relay/
+      run: echo "${{ secrets.SSH_KEY }}" > key.pem
+        scp -i key.pem target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/tag-data-relay/
