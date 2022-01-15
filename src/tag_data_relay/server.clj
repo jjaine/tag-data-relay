@@ -54,4 +54,5 @@
 (defstate server
   :start (start config/config)
   :stop  (when server
-           (.stop server)))
+           (.stop server)
+           (udp-server/stop-udp-server)))

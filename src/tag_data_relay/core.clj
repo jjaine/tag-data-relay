@@ -5,7 +5,7 @@
             [taoensso.timbre :refer [info]])
   (:gen-class))
 
-(defn- main
+(defn -main
   "The entry point for uberjar."
   [& _args]
   (info "Starting server...")
