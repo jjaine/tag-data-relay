@@ -25,6 +25,7 @@ jobs:
     - name: Run build
       run: lein uberjar
     - name: Deploy to EC2
+      if: ${{ github.event_name == 'push' }}
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -33,6 +34,7 @@ jobs:
         source: "target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar"
         target: "tag-data-relay"
     - name: Start app
+      if: ${{ github.event_name == 'push' }}
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -42,6 +44,7 @@ jobs:
           pkill java
           java -jar tag-data-relay/target/tag-data-relay-0.1.0-SNAPSHOT-standalone.jar > log.txt 2> error.txt &
     - name: Health Check
+      if: ${{ github.event_name == 'push' }}
       uses: jtalk/url-health-check-action@v2
       with:
         # Check the following URLs one by one sequentially
@@ -49,4 +52,4 @@ jobs:
         # Fail this action after this many failed attempts
         max-attempts: 3 # Optional, defaults to 1
         # Delay between retries
-        retry-delay: 5s # Optional, only applicable to max-attempts > 1
+        retry-delay: 10s # Optional, only applicable to max-attempts > 1
