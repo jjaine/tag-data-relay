@@ -47,12 +47,17 @@
 
 (defn- start [{:keys [port]}]
   (infof "Start server in port %s" port)
+  (udp-server/start-udp-server)
   (jetty/run-jetty (build-app)
-                   {:port port, :join? false, :async true})
-  (udp-server/start-udp-server))
+                   {:port port, :join? false, :async true}))
+
+(defn- stop [server]
+  (infof "Stop server")
+  (when server
+    (.stop server))
+  (udp-server/stop-udp-server))
 
 (defstate server
   :start (start config/config)
   :stop  (when server
-           (.stop server)
-           (udp-server/stop-udp-server)))
+           (stop server)))

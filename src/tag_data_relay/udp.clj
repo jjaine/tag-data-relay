@@ -30,6 +30,7 @@
 
 (defn stop-udp-server
   []
+  (infof "Stop udp server on port %s" udp-port)
   (.close @udp-server)
-  (reset! @udp-server nil))
+  (reset! udp-server nil))
 
