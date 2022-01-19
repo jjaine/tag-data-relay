@@ -11,7 +11,7 @@
 (s/def ::update-request (s/keys :req-un [::id ::x ::y]))
 (s/def ::subscribe-request (s/keys :req-un [::ip]))
 
-(defonce udp-clients (atom ()))
+(defonce udp-clients (atom {}))
 
 (defn gen-port
   []
@@ -24,8 +24,8 @@
 
 (defn send-updates
   [id x y]
-  (doseq [port (map :port @udp-clients)
-          ip   (map :ip @udp-clients)]
+  (doseq [port (vals @udp-clients)
+          ip   (keys @udp-clients)]
     (println "Send update to" ip port)
     (udp-server/send-update id x y ip port)))
 
@@ -44,10 +44,18 @@
     {:post
      {:parameters {:query ::subscribe-request}
       :handler    (fn [{{{:keys [ip]} :query} :parameters}]
-                    (infof "Subscription request received from " ip)
+                    (infof "Subscription request received from %s" ip)
                     (let [port (gen-port)]
-                      (swap! udp-clients conj {:port port
-                                               :ip  ip})
+                      (swap! udp-clients assoc ip port)
                       {:status 200
                        :body {:port port
-                              :ip ip}}))}}]])
+                              :ip ip}}))}}]
+   ["/unsubscribe"
+    {:post
+     {:parameters {:query ::subscribe-request}
+      :handler    (fn [{{{:keys [ip]} :query} :parameters}]
+                    (infof "Unsubscribe request received from %s" ip)
+                    (swap! udp-clients dissoc ip)
+                    (println "Current clients" @udp-clients)
+                    {:status 200
+                     :body {:ip ip}})}}]])

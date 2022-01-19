@@ -5,7 +5,8 @@ Provides a simple server to forward game tag data (`id`, `x`, `y`) to subscribed
 The server provides the following endpoints:
 
 - `/health`: Supports health checks, for example to check if server is running after deploy.
-- `/api/subscribe?ip=<ip>`: For subscribing to tag updates. The called must provide their IP address. The server uses UDP packets to send to updates and calling this API endpoint gives an UDP port in the response that the client should listen to. 
+- `/api/subscribe?ip=<ip>`: For subscribing to tag updates. The caller must provide their IP address. The server uses UDP packets to send to updates and calling this API endpoint gives an UDP port in the response that the client should listen to. 
+- `/api/unsubscribe?ip=<ip>`: For unsubscribing from tag updates. The caller must provide their IP address.
 - `/api/update?id=<id>&x=<x>&y=<y>`: For pushing updates to subscribers. `id` is the tag id, `x` is the x-coordinate and `y` is the y-coordinate. The updates are sent to all the subscribers as UDP packets.
 
 ## Prerequisites
