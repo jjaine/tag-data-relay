@@ -11,8 +11,8 @@
                    (InetSocketAddress. ip port)))
 
 (defn send-update
-  [id x y ip port]
-  (.send @udp-server (message (str "{ id: " id ", x: " x ", y: " y " }") ip port)))
+  [id x y syncX syncY syncZ ip port]
+  (.send @udp-server (message (str id "," x "," y "," syncX "," syncY "," syncZ) ip port)))
 
 (defn create-udp-server
   []

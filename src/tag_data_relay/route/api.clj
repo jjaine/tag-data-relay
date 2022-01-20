@@ -6,9 +6,12 @@
 (s/def ::id string?)
 (s/def ::x int?)
 (s/def ::y int?)
+(s/def ::syncX float?)
+(s/def ::syncY float?)
+(s/def ::syncZ float?)
 (s/def ::ip string?)
 
-(s/def ::update-request (s/keys :req-un [::id ::x ::y]))
+(s/def ::update-request (s/keys :req-un [::id ::x ::y ::syncX ::syncY ::syncZ]))
 (s/def ::subscribe-request (s/keys :req-un [::ip]))
 
 (defonce udp-clients (atom {}))
@@ -23,22 +26,22 @@
         p))))
 
 (defn send-updates
-  [id x y]
+  [id x y syncX, syncY, syncZ]
   (doseq [port (vals @udp-clients)
           ip   (keys @udp-clients)]
     (println "Send update to" ip port)
-    (udp-server/send-update id x y ip port)))
+    (udp-server/send-update id x y syncX syncY syncZ ip port)))
 
 (def route
   ["/api"
    ["/update"
     {:post
      {:parameters {:query ::update-request}
-      :handler    (fn [{{{:keys [id x y]} :query} :parameters}]
-                    (infof "Received: %s %d %d" id x y)
-                    (send-updates id x y)
+      :handler    (fn [{{{:keys [id x y syncX syncY syncZ]} :query} :parameters}]
+                    (infof "Received: %s %d %d %f %f %f" id x y syncX syncY syncZ)
+                    (send-updates id x y syncX syncY syncZ)
                     {:status 200
-                     :body {:received [id x y]}})}}]
+                     :body {:received [id x y syncX syncY syncZ]}})}}]
 
    ["/subscribe"
     {:post
