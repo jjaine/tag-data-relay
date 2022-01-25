@@ -38,19 +38,31 @@
     (let [id "test"
           x 12
           y 31
-          syncX 12.4
-          syncY 32.1
-          syncZ 1.23
           response (app {:request-method :post
                          :uri            "/api/update"
                          :query-params   {"id"    id
                                           "x"     x
-                                          "y"     y
+                                          "y"     y}})
+          status   (:status response)
+          body     (slurp (:body response))]
+      (is (= 200 status))
+      (is (= (str "{\"received\":[\"" id "\"," x "," y "]}") 
+             body)))))
+
+(deftest sync-route-test
+  (testing "Sync route test"
+    (let [id "test"
+          syncX 12.4
+          syncY 32.1
+          syncZ 1.23
+          response (app {:request-method :post
+                         :uri            "/api/sync"
+                         :query-params   {"id"    id
                                           "syncX" syncX
                                           "syncY" syncY
                                           "syncZ" syncZ}})
           status   (:status response)
           body     (slurp (:body response))]
       (is (= 200 status))
-      (is (= (str "{\"received\":[\"" id "\"," x "," y "," syncX "," syncY "," syncZ "]}") 
+      (is (= (str "{\"received\":[\"" id "\"," syncX "," syncY "," syncZ "]}")
              body)))))

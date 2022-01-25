@@ -11,7 +11,8 @@
 (s/def ::syncZ float?)
 (s/def ::ip string?)
 
-(s/def ::update-request (s/keys :req-un [::id ::x ::y ::syncX ::syncY ::syncZ]))
+(s/def ::update-request (s/keys :req-un [::id ::x ::y]))
+(s/def ::sync-request (s/keys :req-un [::id ::syncX ::syncY ::syncZ]))
 (s/def ::subscribe-request (s/keys :req-un [::ip]))
 
 (defonce udp-clients (atom {}))
@@ -37,11 +38,20 @@
    ["/update"
     {:post
      {:parameters {:query ::update-request}
-      :handler    (fn [{{{:keys [id x y syncX syncY syncZ]} :query} :parameters}]
-                    (infof "Received: %s %d %d %f %f %f" id x y syncX syncY syncZ)
-                    (send-updates id x y syncX syncY syncZ)
+      :handler    (fn [{{{:keys [id x y]} :query} :parameters}]
+                    (infof "Received: %s %d %d" id x y)
+                    (send-updates id x y 0 0 0)
                     {:status 200
-                     :body {:received [id x y syncX syncY syncZ]}})}}]
+                     :body {:received [id x y]}})}}]
+   
+   ["/sync"
+    {:post
+     {:parameters {:query ::sync-request}
+      :handler    (fn [{{{:keys [id syncX syncY syncZ]} :query} :parameters}]
+                    (infof "Received: %s %f %f %f" id syncX syncY syncZ)
+                    (send-updates id -1 -1 syncX syncY syncZ)
+                    {:status 200
+                     :body {:received [id syncX syncY syncZ]}})}}]
 
    ["/subscribe"
     {:post
