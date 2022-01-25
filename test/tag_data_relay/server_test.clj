@@ -54,15 +54,13 @@
     (let [id "test"
           syncX 12.4
           syncY 32.1
-          syncZ 1.23
           response (app {:request-method :post
                          :uri            "/api/sync"
                          :query-params   {"id"    id
                                           "syncX" syncX
-                                          "syncY" syncY
-                                          "syncZ" syncZ}})
+                                          "syncY" syncY}})
           status   (:status response)
           body     (slurp (:body response))]
       (is (= 200 status))
-      (is (= (str "{\"received\":[\"" id "\"," syncX "," syncY "," syncZ "]}")
+      (is (= (str "{\"received\":[\"" id "\"," syncX "," syncY "]}")
              body)))))
