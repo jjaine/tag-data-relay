@@ -29,7 +29,7 @@
   [id x y syncX syncY]
   (doseq [port (vals @udp-clients)
           ip   (keys @udp-clients)]
-    (println "Send update to" ip port)
+    ;(println "Send update to" ip port)
     (udp-server/send-update id x y syncX syncY ip port)))
 
 (def route
@@ -38,7 +38,7 @@
     {:post
      {:parameters {:query ::update-request}
       :handler    (fn [{{{:keys [id x y]} :query} :parameters}]
-                    (infof "Received: %s %d %d" id x y)
+                    ;(infof "Received: %s %d %d" id x y)
                     (send-updates id x y 0 0)
                     {:status 200
                      :body {:received [id x y]}})}}]
@@ -47,7 +47,7 @@
     {:post
      {:parameters {:query ::sync-request}
       :handler    (fn [{{{:keys [id syncX syncY]} :query} :parameters}]
-                    (infof "Received: %s %f %f" id syncX syncY)
+                    ;(infof "Received: %s %f %f" id syncX syncY)
                     (send-updates id -1 -1 syncX syncY)
                     {:status 200
                      :body {:received [id syncX syncY]}})}}]
@@ -56,7 +56,7 @@
     {:post
      {:parameters {:query ::subscribe-request}
       :handler    (fn [{{{:keys [ip]} :query} :parameters}]
-                    (infof "Subscription request received from %s" ip)
+                    ;(infof "Subscription request received from %s" ip)
                     (let [port (gen-port)]
                       (swap! udp-clients assoc ip port)
                       {:status 200
@@ -66,8 +66,8 @@
     {:post
      {:parameters {:query ::subscribe-request}
       :handler    (fn [{{{:keys [ip]} :query} :parameters}]
-                    (infof "Unsubscribe request received from %s" ip)
+                    ;(infof "Unsubscribe request received from %s" ip)
                     (swap! udp-clients dissoc ip)
-                    (println "Current clients" @udp-clients)
+                    ;(println "Current clients" @udp-clients)
                     {:status 200
                      :body {:ip ip}})}}]])
