@@ -1,6 +1,6 @@
 (ns tag-data-relay.route.api
   (:require [clojure.spec.alpha :as s]
-            [taoensso.timbre :refer [infof]]
+            ;[taoensso.timbre :refer [infof]]
             [tag-data-relay.udp :as udp-server]))
 
 (s/def ::id string?)
